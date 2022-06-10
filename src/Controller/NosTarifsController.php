@@ -29,26 +29,26 @@ class NosTarifsController extends AbstractController
 
 
     #[Route('/nos_tarifs/produit/{id}', name: 'app_produit')]
-    public function details($id, ProduitRepository $pr, PanierRepository $pr2, EntreepanierRepository $er, Request $request): Response
+    public function details($id, ProduitRepository $pr, PanierRepository $pr2, Request $request): Response
     {
 
-        $epanier = new Entreepanier;
+        // $epanier = new Entreepanier;
         $produit = $pr->find($id);
-        $panier = $pr2->find($id);
+        // $panier = $pr2->find($id);
 
-        $formulaire = $this->createForm(AjoutproduitType::class, $epanier);
-        $formulaire->handleRequest($request);
+        // $formulaire = $this->createForm(AjoutproduitType::class, $epanier);
+        // $formulaire->handleRequest($request);
 
-        if ($formulaire->isSubmitted() && $formulaire->isValid()) {
+        // if ($formulaire->isSubmitted() && $formulaire->isValid()) {
 
-            $epanier->setProduit($produit);
-            $epanier->setPanier($panier);
-            $er->add($epanier);
-            return $this->redirectToRoute('app_home');
-        }
+        //     $epanier->setProduit($produit);
+        //     $epanier->setPanier($panier);
+        //     $er->add($epanier);
+        //     return $this->redirectToRoute('app_home');
+        // }
 
         return $this->render('nos_tarifs/produit.html.twig', [
-            'form' => $formulaire->createView(),
+            // 'form' => $formulaire->createView(),
             'produit' => $produit
         ]);
     }

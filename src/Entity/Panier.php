@@ -16,9 +16,6 @@ class Panier
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'paniers')]
     private $produit;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $etat;
-
     #[ORM\ManyToOne(targetEntity: Commande::class, cascade: ['persist'], inversedBy: 'paniers')]
     private $commande;
 
@@ -35,18 +32,6 @@ class Panier
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
-
-        return $this;
-    }
-
-    public function getEtat(): ?string
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(?string $etat): self
-    {
-        $this->etat = $etat;
 
         return $this;
     }

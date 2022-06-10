@@ -35,13 +35,24 @@
 						----
 						<p class="lead">{{produit.contenu}}</p>
 
-						<div class="my-4">
+						<div
+							class="my-4">
 
-							<a href="{{ path('add', {id: produit.id})}}" class="btn btn-danger w-100" style="border:5px solid #dc3545;">
-								<span class="my-auto">
-									Acheter
-								</span>
-							</a>
+							{# <a href="{{ path('add', {id: produit.id})}}" class="btn btn-danger w-100" style="border:5px solid #dc3545;">
+																																				<span class="my-auto">
+																																					Acheter
+																																				</span>
+																																			</a> #}
+
+							<form action="{{ path('add', {id: produit.id}) }}" method="post">
+								<input type="hidden" name="quantite" id="quantite" min="1" step="1" placeholder="Quantité" style="max-width: 50px;" value="1">
+								<button type="submit" class="btn btn-danger w-100">
+									<span class="my-auto">
+										Acheter
+									</span>
+								</button>
+							</form>
+
 						</div>
 					</div>
 

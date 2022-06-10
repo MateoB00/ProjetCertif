@@ -20,18 +20,15 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class ProfilUserController extends AbstractController
-{
+class ProfilUserController extends AbstractController {
     #[Route('/profil/{user}', name: 'app_profil')]
-    public function index(User $user): Response
-    {
+    public function index(User $user): Response {
 
         return $this->render('profil_user/profil.html.twig', []);
     }
 
     #[Route('/user/update/{id}', name: 'app_update_self_user')]
-    public function update($id, UserRepository $ur, Request $request): Response
-    {
+    public function update($id, UserRepository $ur, Request $request): Response {
         $user = $ur->find($id);
         $formulaire = $this->createForm(UpdatebyUserType::class, $user);
         $formulaire->handleRequest($request);
@@ -53,8 +50,7 @@ class ProfilUserController extends AbstractController
 
 
     #[Route('/user/toncoach/{user}', name: 'app_ton_coach')]
-    public function toncoach(User $user): Response
-    {
+    public function toncoach(User $user): Response {
         return $this->render('profil_user/toncoach.html.twig', [
             'coach' => $user
         ]);
@@ -67,8 +63,7 @@ class ProfilUserController extends AbstractController
 
 
     #[Route('/user/update_mdp/{id}', name: 'app_update_self_mdp_user')]
-    public function updatemdp(UserPasswordHasherInterface $passwordHasher, $id, UserRepository $ur, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
-    {
+    public function updatemdp(UserPasswordHasherInterface $passwordHasher, $id, UserRepository $ur, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response {
 
         $user = $ur->find($id);
         $formulaire = $this->createForm(ChangePasswordType::class, $user);
@@ -114,8 +109,7 @@ class ProfilUserController extends AbstractController
     /**
      * @Route("/send", name="send")
      */
-    public function send(Request $request, EntityManagerInterface $em): Response
-    {
+    public function send(Request $request, EntityManagerInterface $em): Response {
         $message = new Messages;
         $form = $this->createForm(MessagesType::class, $message);
 
@@ -139,8 +133,7 @@ class ProfilUserController extends AbstractController
     /**
      * @Route("/send_coach/{user}", name="send_coach")
      */
-    public function sendCoach(User $user, Request $request, EntityManagerInterface $em): Response
-    {
+    public function sendCoach(User $user, Request $request, EntityManagerInterface $em): Response {
         $message = new Messages;
         $form = $this->createForm(MessagescoachType::class, $message);
 
@@ -163,12 +156,37 @@ class ProfilUserController extends AbstractController
             'coach' => $user
         ]);
     }
+    /**
+     * @Route("/send_answer/{user}", name="send_answer")
+     */
+    public function sendAnswer(User $user, Request $request, EntityManagerInterface $em): Response {
+        $message = new Messages;
+        $form = $this->createForm(MessagescoachType::class, $message);
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $message->setDestinataire($user);
+            $message->setExpediteur($this->getUser());
+
+            $em->persist($message);
+            $em->flush();
+
+            $this->addFlash("message", "Message envoyé à ton coach avec succès.");
+            return $this->redirectToRoute('sent');
+        }
+
+        return $this->render("messages/send_answer.html.twig", [
+            "form" => $form->createView(),
+            'coach' => $user
+        ]);
+    }
 
     /**
      * @Route("/received", name="received")
      */
-    public function received(): Response
-    {
+    public function received(): Response {
         return $this->render('messages/received.html.twig');
     }
 
@@ -176,16 +194,14 @@ class ProfilUserController extends AbstractController
     /**
      * @Route("/sent", name="sent")
      */
-    public function sent(): Response
-    {
+    public function sent(): Response {
         return $this->render('messages/sent.html.twig');
     }
 
     /**
      * @Route("/read/{id}", name="read")
      */
-    public function read(Messages $message, EntityManagerInterface $em): Response
-    {
+    public function read(Messages $message, EntityManagerInterface $em): Response {
 
         $sender = $this->getUser();
         $expediteur = $message->getExpediteur();
@@ -202,8 +218,7 @@ class ProfilUserController extends AbstractController
     /**
      * @Route("/delete/message/{id}", name="delete_message")
      */
-    public function deleteMessage(Messages $message, EntityManagerInterface $em): Response
-    {
+    public function deleteMessage(Messages $message, EntityManagerInterface $em): Response {
 
         $em->remove($message);
         $em->flush();

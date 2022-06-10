@@ -30,6 +30,9 @@ class Commande
     #[ORM\Column(type: 'datetime')]
     private $creerA;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $etat;
+
     public function __construct()
     {
         $this->paniers = new ArrayCollection();
@@ -114,6 +117,18 @@ class Commande
     public function setCreerA(\DateTimeInterface $creerA): self
     {
         $this->creerA = $creerA;
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }

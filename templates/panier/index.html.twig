@@ -19,90 +19,89 @@
 							<p class="text-center">Votre panier est vide</p>
 						{% endif %}
 						{% if not app.user and dataPanier %}
-							<a class="btn btn-warning w-50 mx-auto my-3" href="{{ path("app_login") }}">Veuillez vous connecter afin de régler vos achats</a>
+							<a class="btn btn-warning w-50 mx-auto my-3" href="{{ path("app_login") }}">Veuillez vous connecter
+																																																																					afin de régler vos achats</a>
 						{% endif %}
 					</p>
-					<p class="mb-5 text-center">
-						<table id="shoppingCart" class="table table-condensed table-responsive">
-							<thead>
-								<tr>
-									<th style="width:60%">Produit</th>
-									<th style="width:12%">Prix</th>
-									<th style="width:10%">Quantité</th>
-									<th style="width:16%"></th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for element in dataPanier %}
-
+					{% if dataPanier %}
+						<p class="mb-5 text-center">
+							<table id="shoppingCart" class="table table-condensed table-responsive">
+								<thead>
 									<tr>
-										<td data-th="Product">
-											<div class="row">
-												<div class="col-md-3 text-left">
-													<img src="{{ asset('images/produits/'~ element.produit.img) }}" alt="" class="img-fluid d-none d-md-block rounded mb-2 shadow ">
-												</div>
-												<div class="col-md-9 text-left mt-sm-2">
-													<h4>{{ element.produit.nom }}</h4>
-													<p class="font-weight-light">résumé</p>
-												</div>
-											</div>
-										</td>
-										<td data-th="Price">{{ element.produit.prix }}&nbsp;€</td>
-										<td data-th="Quantity">
-											<input type="" class="form-control form-control-lg text-center" value="{{ element.quantite }}" readonly="readonly">
-										</td>
-										<td class="actions" data-th="">
-											<div class="text-right">
-												<a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path("remove", {id: element.produit.id})}}">
-													<i class="fa-solid fa-minus"></i>
-												</a>
-												<a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path("add", {id: element.produit.id})}}">
-													<i class="fa-solid fa-plus"></i>
-												</a>
-
-												<a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path("delete", {id: element.produit.id})}}">
-													<i class="fas fa-trash"></i>
-												</a>
-
-											</div>
-										</td>
+										<th style="width:60%">Produit</th>
+										<th style="width:12%">Prix</th>
+										{# <th style="width:10%">Quantité</th> #}
+										<th style="width:16%"></th>
 									</tr>
-								{% endfor %}
-
-							</tbody>
-						</table>
-
-						{% if dataPanier %}
-
-
-							<div class="float-right col-sm-6">
-								<a class="btn btn-danger btn-md mb-2" href="{{ path('delete_all') }}">
-									<i class="fas fa-trash"></i>
-								</a>
+								</thead>
 							{% endif %}
+							{% for element in dataPanier %}
 
-						</div>
-						<div class="float-end text-end">
-							<h4>Total :
-							</h4>
-							<h1>{{ total }}
-								€</h1>
-							{% if app.user and dataPanier %}
-								<a href="{{ path('app_paiement') }}" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Payer</a>
-							{% endif %}
+								<tr>
+									<td data-th="Product">
+										<div class="row">
+											<div class="col-md-3 text-left">
+												<img src="{{ asset('images/produits/'~ element.produit.img) }}" alt="" class="img-fluid d-none d-md-block rounded mb-2 shadow ">
+											</div>
+											<div class="col-md-9 text-left mt-sm-2">
+												<h4>{{ element.produit.nom }}</h4>
+												<p class="font-weight-light">résumé</p>
+											</div>
+										</div>
+									</td>
+									<td data-th="Price">{{ element.produit.prix }}&nbsp;€</td>
+									<td
+										data-th="Quantity">{# <input type="" class="form-control form-control-lg text-center"
+																																																																																																value="{{ element.quantite }}" readonly="readonly"> #}
+									</td>
+									<td class="actions" data-th="">
+										<div
+											class="text-end">
+											{# <a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path("
+																																																																																																	remove", {id: element.produit.id})}}">
+																																																																																																	<i class="fa-solid fa-minus"></i>
+																																																																																																</a>
+																																																																																																<a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path(" add", {id:
+																																																																																																	element.produit.id})}}">
+																																																																																																	<i class="fa-solid fa-plus"></i>
+																																																																																																</a> #}
 
+											<a class="btn btn-white border-secondary bg-white btn-md mb-2" href="{{path("delete", {id: element.produit.id})}}">
+												<i class="fas fa-trash"></i>
+											</a>
+
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
 						</p>
-					</p>
-				</div>
+					</tbody>
+				</p>
+			</table>
+
+			{% if dataPanier %}
+
+
+				<div class="float-right col-sm-6">
+					<a class="btn btn-danger btn-md mb-2" href="{{ path('delete_all') }}">
+						<i class="fas fa-trash"></i>
+					</a>
+				{% endif %}
+
+			</div>
+			<div class="float-end text-end">
+				<h4>Total :
+				</h4>
+				<h1>{{ total }}
+					€</h1>
+				{% if app.user and dataPanier %}
+					<a href="{{ path('app_paiement') }}" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Payer</a>
+				{% endif %}
+
 			</p>
-		</div>
+		</p>
 	</div>
-	<div class="row mt-4 d-flex align-items-center">
-		<div class="col-sm-6 order-md-2 text-right"></div>
-		<div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
-			<a class="btn btn-primary" href="{{ path("app_nos_tarifs")}}">
-				<i class="fas fa-arrow-left mr-2"></i>
-				Continuez vos achats</a>
-		</div>
-	</div>
-</div></section></div><br>{% endblock %}
+</p></div></div><div class="row mt-4 d-flex align-items-center mb-2"><div class="col-sm-6 order-md-2 text-right"></div><div class="col-sm-6 mb-5 mb-m-1 order-md-1 text-md-left">
+<a class="btn btn-primary" href="{{ path("app_nos_tarifs")}}">
+	<i class="fas fa-arrow-left mr-2"></i>
+	Continuez vos achats</a></div></div></div></section></div><br>{% endblock %}

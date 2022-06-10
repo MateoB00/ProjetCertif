@@ -1,15 +1,18 @@
-.carre_1{
+.carre_1 {
     background-color: #25292c;
-    color: rgba(185,182,176,255);
+    color: rgba(185, 182, 176, 255);
 }
-.img_about_us_1{
-    height:auto;
-    width:100%;
+
+.img_about_us_1 {
+    height: auto;
+    width: 100%;
 }
-.border1{
+
+.border1 {
     border-color: #25292c !important;
 }
-ol>li{
+
+ol>li {
     border-radius: 25px;
 }
 
@@ -22,8 +25,8 @@ ol>li{
     position: relative;
     overflow: hidden;
     border: 2px solid grey;
-    background-color:#25292c;
-    color: rgba(185,182,176,255);
+    background-color: #25292c;
+    color: rgba(185, 182, 176, 255);
     box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 

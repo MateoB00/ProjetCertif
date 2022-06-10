@@ -60,7 +60,14 @@
 								</div>
 								<div class="buttons d-flex flex-row gap-3 px-3">
 									<a href="{{ path('app_produit', {id: programme.id}) }}" class="btn btn-outline-danger w-100" style="border:5px solid #dc3545">Voir +</a>
-									<a href="{{ path('add', {id: programme.id})}}" class="btn btn-danger w-100" style="border:5px solid #dc3545">Acheter</a>
+									<form action="{{ path('add', {id: programme.id}) }}" method="post">
+										<input type="hidden" name="quantite" id="quantite" min="1" step="1" placeholder="Quantité" style="max-width: 50px;" value="1">
+										<button type="submit" class="btn btn-danger w-100">
+											<span class="my-auto">
+												Acheter
+											</span>
+										</button>
+									</form>
 								</div>
 							</div>
 

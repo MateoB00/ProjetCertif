@@ -1,10 +1,12 @@
-.carre_1{
+.carre_1 {
     background-color: #25292c;
-    color: rgba(185,182,176,255);
+    color: rgba(185, 182, 176, 255);
 }
-.border1{
+
+.border1 {
     border-color: #25292c !important;
 }
+
 .card {
     width: 350px;
     border: none;
