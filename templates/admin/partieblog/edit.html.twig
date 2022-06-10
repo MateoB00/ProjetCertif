@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+
+{% block title %}Modifier une partie de blog
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier une partie de blog</h1><br>
+
+	{{ include('admin/partieblog/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<a href="{{ path('app_partieblog_index') }}">back to list</a>
+
+	{{ include('admin/partieblog/_delete_form.html.twig') }}
+{% endblock %}

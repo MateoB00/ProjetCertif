@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+
+{% block title %}Nouvelle Partieblog
+{% endblock %}
+
+{% block body %}
+
+
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>Blog correspondant
+				</th>
+				<th>Titre Partie avec son numéro</th>
+				<th>Contenu de la partie</th>
+				<th>Id de la partie</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+			{% for blog in blogs %}
+
+				{% for partieblog in blog.partieblog %}
+					{% if app.request.get('blog') ==  partieblog.blog %}
+
+						<tr>
+							<td>{{ partieblog.blog.titre }}</td>
+							<td>{{ partieblog.titrepartie }}</td>
+							<td>{{ partieblog.contenupartie }}</td>
+							<td>{{ partieblog.id }}</td>
+							<td>
+								<a href="{{ path('app_partieblog_show', {'id': partieblog.id}) }}">Voir +</a>
+								<a href="{{ path('app_partieblog_edit', {'id': partieblog.id}) }}">Modifier</a>
+							</td>
+						</tr>
+
+					{% endif %}
+				{% endfor %}
+
+
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<h1>Créer une nouvelle Partie blog</h1>
+
+	{{ include('admin/partieblog/_form.html.twig') }}
+
+	<a href="{{ path('app_partieblog_index') }}">Liste des parties de blogs</a>
+{% endblock %}

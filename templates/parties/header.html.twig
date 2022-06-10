@@ -1,0 +1,61 @@
+<header class="bg-dark">
+	<section id="nav bg-dark">
+		<nav id="navbar_top" class=" navbar sticky-top navbar-expand-lg navbar-dark home_nav ">
+			<div class="container">
+				<a class="navbar-brand" href="{{ path("app_home") }}"><img style="height: 70px; border-radius: 50%;" src="{{ asset('images/logo/logo4.jpg') }}" alt="Logo"></a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon" id="clickjs"></span>
+					{# Menu burger #}
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link color_nav ms-3" href="{{ path("app_nos_tarifs")}}">Nos tarifs</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link ms-3 color_nav" href="{{ path('app_programmes') }}">Programmes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link ms-3 color_nav" href="{{ path("app_blog")}}">Blogs</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link ms-3 color_nav" href="{{ path("app_contact") }}">Contact</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link ms-3 color_nav" href="{{ path("app_about_us")}}">A propos de nous</a>
+						</li>
+
+						{% if app.user %}
+
+							<li class="nav-item">
+								<a class="nav-link ms-3 color_nav" href="{{ path("app_profil", {user: app.user.id})}}">{{app.user.prenom|upper}}</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link ms-3 color_nav" href="{{ path("app_logout") }}">Déconnexion</a>
+							</li>
+						{% else %}
+
+
+							<li class="nav-item">
+								<a class="nav-link ms-3 color_nav" href="{{ path("app_login") }}">Connexion</a>
+							</li>
+						{% endif %}
+						<li
+							class="nav-item">
+							{# <a class="nav-link ms-3 color_nav" href="{{ path("app_panier", {id: app.user.id})}}"> #}
+							<a class="nav-link ms-3" href="{{ path('app_panier') }}">
+								<i class="fa-solid fa-cart-shopping"></i>
+							</a>
+
+						</li>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li class="nav-item">
+								<a class="nav-link ms-3 color_nav" href="{{ path("app_choiceuser") }}">ADMIN</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</section>
+</header>

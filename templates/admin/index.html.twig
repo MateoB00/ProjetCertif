@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update
+{% endblock %}
+
+
+{% block body %}
+
+
+	<section class="pt-4 text-center">
+		<section class="container py-5">
+			<div class="col-12 w-75 mx-auto">
+				<label class="mb-3">Changer le statut de tous les utilisateurs</label>
+				<select id="liste" onchange="valueSelect()" class="form-control form-control-sm" style="background-color:grey;">
+					<option></option>
+					{% for user in users %}
+						<option value="{{ user.id }}">Nom -
+							{{ user.nom|upper }}
+							- Prénom
+							{{ user.prenom }}
+							- id
+							{{ user.id }}
+						</option>
+
+					{% endfor %}
+				</select>
+				<a id="link" class="btn btn-warning mt-3">Modifier utilisateur séléctionner ou administrer un coach</a>
+				<br>
+				<br>
+
+
+				<div class="col-12 mx-auto">
+					<label class="mb-3">Changer le statut de tous les coachs</label>
+					<select id="liste2" onchange="valueSelect2()" class="form-control form-control-sm" style="background-color:grey;">
+						<option></option>
+						{% for user in users %}
+							{% if user.estcoach > 0 %}
+								<option value="{{ user.id }}">Nom -
+									{{ user.nom|upper }}
+									- Prénom
+									{{ user.prenom }}
+									- id
+									{{ user.id }}
+								</option>
+
+							{% endif %}
+						{% endfor %}
+					</select>
+
+
+					<a id="link2" class="btn btn-warning mt-3">Modifier coach séléctionner</a>
+					<br><br>-------------------<br>
+					<a class="btn btn-success mt-3" href="{{ path('app_produit_nouveau') }}">Nouveau produit</a>
+
+
+				</div><br>
+
+				<div class="col-12 mx-auto">
+					<label class="mb-3">Modifier les produits</label>
+					<select id="liste3" onchange="valueSelect3()" class="form-control form-control-sm" style="background-color:grey;">
+						<option></option>
+						{% for produit in produits %}
+							<option value="{{ produit.id }}">Nom -
+								{{ produit.nom|upper }}
+								- Prix
+								{{ produit.prix }}
+								- id
+								{{ produit.id }}
+							</option>
+
+						{% endfor %}
+					</select>
+					<a id="link3" class="btn btn-warning mt-3">Modifier + delete produit séléctionner</a>
+
+					<br><br>-------------------<br>
+					<a class="btn btn-success mt-3" href="{{ path('app_blog_new', {user: app.user.id}) }}">Nouveau blog</a>
+
+					<div class="col-12  mx-auto">
+						<label class="mb-3">Modifier les blogs</label>
+						<select id="liste4" onchange="valueSelect4()" class="form-control form-control-sm" style="background-color:grey;">
+							<option></option>
+							{% for blog in blogs %}
+								<option value="{{ blog.id }}">Nom -
+									{{ blog.titre|upper }}
+									- Catégorie
+									{{ blog.categorie.nom }}
+									- id
+									{{ blog.id }}
+								</option>
+
+							{% endfor %}
+						</select>
+						<a id="link4" class="btn btn-warning mt-3">Modifier + delete blog séléctionner</a>
+						<br><br>-------------------<br>
+
+						<div class="col-12  mx-auto">
+							<div class="col-12  mx-auto">
+								<label class="mb-3">Ajouter une partie de blog à un blog séléctionner</label>
+								<select id="liste5" onchange="valueSelect5()" class="form-control form-control-sm" style="background-color:grey;">
+									<option></option>
+									{% for blog in blogs %}
+										<option value="{{ blog.id }}">Nom -
+											{{ blog.titre|upper }}
+											- Catégorie
+											{{ blog.categorie.nom }}
+											- id
+											{{ blog.id }}
+										</option>
+
+									{% endfor %}
+								</select>
+								<a id="link5" class="btn btn-success mt-3">Ajouter une partie de blog</a>
+								<br><br>-------------------<br>
+
+								<a class="btn btn-primary mt-3" href="{{ path('app_blog_index') }}">Liste des blogs</a>
+								<a class="btn btn-primary mt-3" href="{{ path('app_partieblog_index') }}">Liste des parties de blogs</a>
+								<a class="btn btn-primary mt-3" href="{{ path('app_produit_index') }}">Liste des produits</a>
+
+
+							</section>
+						</section>
+
+
+					{% endblock %}
+					{% block js %}
+						<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+						<script src="{{ asset('js/admin.js') }}"></script>
+						<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+					{% endblock %}
