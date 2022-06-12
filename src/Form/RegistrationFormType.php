@@ -18,10 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class RegistrationFormType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+class RegistrationFormType extends AbstractType {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
 
             ->add('nom', TextType::class, [
@@ -98,7 +96,18 @@ class RegistrationFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'input',
-                    'placeholder' => '2 Avenue des Champs Elysée - Paris 75008'
+                    'placeholder' => '2 Avenue des Champs Elysée'
+                ]
+            ])
+            ->add('ville', TextType::class, [
+                'required' => true,
+                'label' => false,
+                'constraints' => [
+                    new NotBlank
+                ],
+                'attr' => [
+                    'class' => 'input',
+                    'placeholder' => 'Paris 75008'
                 ]
             ])
             ->add('email', EmailType::class, [
@@ -169,8 +178,7 @@ class RegistrationFormType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);

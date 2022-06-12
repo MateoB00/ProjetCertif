@@ -10,10 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class UpdatebyUserType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+class UpdatebyUserType extends AbstractType {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             // ->add('email', TextType::class, [
             //     'label' => false,
@@ -43,6 +41,13 @@ class UpdatebyUserType extends AbstractType
                     'placeholder' => 'Adresse'
                 ]
             ])
+            ->add('ville', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'input',
+                    'placeholder' => 'Ville'
+                ]
+            ])
             ->add('numtel', TextType::class, [
                 'label' => false,
                 'attr' => [
@@ -63,8 +68,7 @@ class UpdatebyUserType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);

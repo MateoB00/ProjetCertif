@@ -6,7 +6,9 @@
 <p>Voici le contenu du message :</p>
 
 <p style="background-color: #ddd; width:75%; margin: auto; padding: 12px;">{{ message|striptags('<br>')|raw }}
-
+{% for produit in produits %}
+{{ produit.nom }}
+{% endfor %} 
 </p>
 
 <p>Pour répondre à cet email, cliquez sur le bouton "Répondre", ou bien écrivez un email à

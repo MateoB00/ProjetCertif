@@ -14,10 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class CoachUpdateType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+class CoachUpdateType extends AbstractType {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('email')
             ->add('roles', ChoiceType::class, [
@@ -34,8 +32,10 @@ class CoachUpdateType extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('adresse')
+            ->add('ville')
             ->add('numtel')
             ->add('coachpdp', FileType::class, [
+                'required' => false,
                 'data_class' => null,
                 'label' => 'photo de profil',
                 'constraints' => [
@@ -60,8 +60,7 @@ class CoachUpdateType extends AbstractType
             ->add('submit', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);

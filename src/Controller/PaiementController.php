@@ -6,7 +6,9 @@ use DateTime;
 use Stripe\Stripe;
 use App\Entity\Panier;
 use App\Entity\Commande;
+use App\Entity\Messages;
 use Stripe\Checkout\Session;
+use App\Repository\UserRepository;
 use App\Repository\PanierRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\CommandeRepository;
@@ -73,18 +75,21 @@ class PaiementController extends AbstractController {
 
 
     #[Route('/success_paiement/{token}', name: 'paiement_success')]
-    public function success($token, MailerInterface $mailer, SessionInterface $session, CommandeRepository $cr, ProduitRepository $pr, EntityManagerInterface $em): Response {
+    public function success($token, UserRepository $ur, MailerInterface $mailer, SessionInterface $session, CommandeRepository $cr, ProduitRepository $pr, EntityManagerInterface $em): Response {
         $panier1 = $session->get('panier');
         $commande = $cr->findOneBy([
             'token' => $token
         ]);
         $user = $this->getUser();
-
+        $admin = $ur->findByRole('ROLE_ADMIN');
 
         $ids = $panier1;
         $produits = $pr->getAllProduits($ids);
 
+
         // dd($produits);
+
+        if (empty($commande)) throw new AccessDeniedHttpException;
 
         foreach ($panier1 as $id => $quantite) {
             $panier = new Panier;
@@ -100,6 +105,8 @@ class PaiementController extends AbstractController {
                 // dd($produit);
                 $email = new TemplatedEmail();
 
+                $pathProgramme = $this->getParameter('programmeDirectory') . '/' . $produit->getNom() . '.pdf';
+
                 $email->from('Programme' . ' ' . 'Refuge des Combattants' . ' <' . 'lerefugedescombattants@gmail.com' . '>')
                     ->to($user->getEmail())
                     ->replyTo('lerefugedescombattants@gmail.com')
@@ -111,31 +118,93 @@ class PaiementController extends AbstractController {
                         // 'tel' => ($data['telephone'])
                         'fromEmail' => 'lerefugedescombattants@gmail.com',
                         'message' => 'programme'
-                    ]);
+                    ])
+                    ->attachFromPath($pathProgramme, null, 'application/pdf');
+
 
 
                 $mailer->send($email);
             }
+            if (!$produit->getEstprogramme()) {
+                $users = $ur->findAll();
+                // dd($admin[0]);
+
+                $message = new Messages;
+
+                foreach ($users as $us) {
+                    if ($us->getEstcoach() === true) {
+                        $message->setDestinataire($us);
+                    }
+                    $message->setMessage('Un nouvel adhérent à préscrit le ' . $produit->getNom() . ', habite au ' . $user->getAdresse() . ' ' . 'à' . ' ' . $user->getVille() .  ', Allez y.');
+                    $message->setTitre('Nouvel adhérent');
+                    $message->setExpediteur($admin[0]);
+
+                    $em->persist($message);
+                    $em->flush();
+                }
+
+                $messageForAdherent = new Messages;
+
+                $messageForAdherent->setMessage('Suite à la prise de ton forfait, tu seras mis en contact très rapidement par un de nos coachs professionel. 48h jours ouvrés.');
+                $messageForAdherent->setTitre('Achat de forfait');
+                $messageForAdherent->setDestinataire($user);
+                $messageForAdherent->setExpediteur($admin[0]);
+
+                $em->persist($messageForAdherent);
+                $em->flush();
+            }
         };
-        // dd($programmes);
 
-        // dd($commande, $panier1, $panier);
+        if ($produit->getEstprogramme() === true) {
+        }
 
-        if (empty($commande)) throw new AccessDeniedHttpException;
+
 
 
 
         if ($commande->getId() === $panier->getCommande()->getId()) {
             $commande->setEtat('Payé');
         }
+        if ($commande->getEtat() === 'Payé') {
+            $email = new TemplatedEmail();
+
+            $email->from('Facture' . ' ' . 'Refuge des Combattants' . ' <' . 'lerefugedescombattants@gmail.com' . '>')
+                ->to($user->getEmail())
+                ->replyTo('lerefugedescombattants@gmail.com')
+                ->subject('Facture nº' . $commande->getReference())
+                ->htmlTemplate('emails_template/facture.html.twig')
+                ->context([
+                    // 'fromEmail' => $data['email'],
+                    // 'message' => nl2br($data['message']),
+                    // 'tel' => '055050505',
+                    'produits' => ($produits),
+                    'fromEmail' => 'lerefugedescombattants@gmail.com',
+                    'message' => 'Facture'
+                ]);
+
+
+            $mailer->send($email);
+
+
+            $message = new Messages;
+
+            $message->setMessage('Merci pour ta confince, tu as reçu une confirmation, une facture ainsi le/les programme(s) à cet email : ' . $user->getEmail() . ' .Pour tout soucis veuillez nous contactez.');
+            $message->setTitre('Merci pour ta confiance !');
+            $message->setExpediteur($admin[0]);
+            $message->setDestinataire($user);
+
+            $em->persist($message);
+            $em->flush();
+        }
+        // dd($produits);
 
 
 
-        $session->set('panier', []);
+        // $session->set('panier', []);
 
         $cr->add($commande);
 
-        return $this->render('home/home.html.twig');
+        return $this->redirectToRoute('app_home');
     }
 
 

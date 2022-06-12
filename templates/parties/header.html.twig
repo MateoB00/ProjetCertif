@@ -53,6 +53,11 @@
 								<a class="nav-link ms-3 color_nav" href="{{ path("app_choiceuser") }}">ADMIN</a>
 							</li>
 						{% endif %}
+						{% if app.user.estcoach ?? false %}
+							<li class="nav-item">
+								<a class="nav-link ms-3 color_nav" href="{{ path("app_choiceuser") }}">COACH</a>
+							</li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
