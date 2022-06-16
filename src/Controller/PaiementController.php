@@ -3,13 +3,15 @@
 namespace App\Controller;
 
 use DateTime;
+use Dompdf\Dompdf;
 use Stripe\Stripe;
+use Dompdf\Options;
 use App\Entity\Panier;
 use App\Entity\Commande;
 use App\Entity\Messages;
+use App\Entity\Abonnement;
 use Stripe\Checkout\Session;
 use App\Repository\UserRepository;
-use App\Repository\PanierRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,8 +82,11 @@ class PaiementController extends AbstractController {
         $commande = $cr->findOneBy([
             'token' => $token
         ]);
+        $refCommande = $commande->getReference();
         $user = $this->getUser();
         $admin = $ur->findByRole('ROLE_ADMIN');
+
+        $total = 0;
 
         $ids = $panier1;
         $produits = $pr->getAllProduits($ids);
@@ -98,6 +103,9 @@ class PaiementController extends AbstractController {
             $panier->setCommande($commande);
             $em->persist($panier);
             $em->flush();
+
+
+            $total += $produit->getPrix() * $quantite['quantite'];
             // dd($user->getEmail());
             // $programmes = $produits[$id]->getEstprogramme() === true;
 
@@ -124,10 +132,13 @@ class PaiementController extends AbstractController {
 
 
                 $mailer->send($email);
-            }
-            if (!$produit->getEstprogramme()) {
+            } else {
+
+                /*
+                * Messages à tous les coachs prévenant qu'il y a un nouvel adhérent + Message à l'adhérent que son achat du forfait est bien prise en compte 
+                */
+
                 $users = $ur->findAll();
-                // dd($admin[0]);
 
                 $message = new Messages;
 
@@ -135,7 +146,8 @@ class PaiementController extends AbstractController {
                     if ($us->getEstcoach() === true) {
                         $message->setDestinataire($us);
                     }
-                    $message->setMessage('Un nouvel adhérent à préscrit le ' . $produit->getNom() . ', habite au ' . $user->getAdresse() . ' ' . 'à' . ' ' . $user->getVille() .  ', Allez y.');
+
+                    $message->setMessage('Un nouvel adhérent à préscrit le ' . $produit->getNom() . ', habite au ' . $user->getAdresse() . ' ' . 'à' . ' ' . strtoupper($user->getVille()) .  ', Allez check votre profil de coach :).');
                     $message->setTitre('Nouvel adhérent');
                     $message->setExpediteur($admin[0]);
 
@@ -150,14 +162,60 @@ class PaiementController extends AbstractController {
                 $messageForAdherent->setDestinataire($user);
                 $messageForAdherent->setExpediteur($admin[0]);
 
+                $user->setAttenteDunCoach(1);
+
+                $abonnement = new Abonnement;
+
+                $abonnement->setUser($user);
+                $abonnement->setForfait($produit);
+                $abonnement->setEncours(1);
+                $abonnement->setRefCommande($refCommande);
+
                 $em->persist($messageForAdherent);
+                $em->flush();
+                $em->persist($user);
+                $em->flush();
+                $em->persist($abonnement);
                 $em->flush();
             }
         };
 
-        if ($produit->getEstprogramme() === true) {
-        }
 
+
+        // if ($produit->getEstprogramme() != 1) {
+        // }
+
+
+        /*
+        *  Génération de la facture en pdf + stockage dans public/factures 
+        */
+        $options = new Options();
+        $options->setIsRemoteEnabled(true);
+        $dompdf = new Dompdf($options);
+
+
+        $html = $this->renderView('emails_template/facturePdf.html.twig', [
+            'produits' => $produits,
+            'user' => $user,
+            'total' => $total,
+            'commande' => $commande,
+
+        ]);
+
+
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+
+        $output = $dompdf->output();
+
+        $directoryFacture = $this->getParameter('factureDirectory');
+        $pathFacture = $directoryFacture . '/' . $commande->getToken() . '.pdf';
+
+        file_put_contents($pathFacture, $output);
 
 
 
@@ -165,6 +223,11 @@ class PaiementController extends AbstractController {
         if ($commande->getId() === $panier->getCommande()->getId()) {
             $commande->setEtat('Payé');
         }
+
+        /*
+        * Envoie de la confirmation de la facture par email + PDF 
+        */
+
         if ($commande->getEtat() === 'Payé') {
             $email = new TemplatedEmail();
 
@@ -174,13 +237,12 @@ class PaiementController extends AbstractController {
                 ->subject('Facture nº' . $commande->getReference())
                 ->htmlTemplate('emails_template/facture.html.twig')
                 ->context([
-                    // 'fromEmail' => $data['email'],
-                    // 'message' => nl2br($data['message']),
-                    // 'tel' => '055050505',
                     'produits' => ($produits),
                     'fromEmail' => 'lerefugedescombattants@gmail.com',
                     'message' => 'Facture'
-                ]);
+                ])
+                ->attachFromPath($pathFacture, null, 'application/pdf');
+
 
 
             $mailer->send($email);
@@ -188,7 +250,7 @@ class PaiementController extends AbstractController {
 
             $message = new Messages;
 
-            $message->setMessage('Merci pour ta confince, tu as reçu une confirmation, une facture ainsi le/les programme(s) à cet email : ' . $user->getEmail() . ' .Pour tout soucis veuillez nous contactez.');
+            $message->setMessage('Merci pour ta confiance, tu as reçu une confirmation, une facture ainsi le/les programme(s) à cet email : ' . $user->getEmail() . ' .Pour tout soucis veuillez nous contactez.');
             $message->setTitre('Merci pour ta confiance !');
             $message->setExpediteur($admin[0]);
             $message->setDestinataire($user);
@@ -196,7 +258,7 @@ class PaiementController extends AbstractController {
             $em->persist($message);
             $em->flush();
         }
-        // dd($produits);
+
 
 
 

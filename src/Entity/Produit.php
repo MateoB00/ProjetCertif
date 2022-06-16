@@ -37,9 +37,13 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Panier::class)]
     private $paniers;
 
+    #[ORM\OneToMany(mappedBy: 'forfait', targetEntity: Abonnement::class)]
+    private $abonnements;
+
     public function __construct()
     {
         $this->paniers = new ArrayCollection();
+        $this->abonnements = new ArrayCollection();
     }
 
     // public function __toString(): string
@@ -160,6 +164,36 @@ class Produit
             // set the owning side to null (unless already changed)
             if ($panier->getProduit() === $this) {
                 $panier->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Abonnement>
+     */
+    public function getAbonnements(): Collection
+    {
+        return $this->abonnements;
+    }
+
+    public function addAbonnement(Abonnement $abonnement): self
+    {
+        if (!$this->abonnements->contains($abonnement)) {
+            $this->abonnements[] = $abonnement;
+            $abonnement->setForfait($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAbonnement(Abonnement $abonnement): self
+    {
+        if ($this->abonnements->removeElement($abonnement)) {
+            // set the owning side to null (unless already changed)
+            if ($abonnement->getForfait() === $this) {
+                $abonnement->setForfait(null);
             }
         }
 

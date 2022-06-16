@@ -8,7 +8,9 @@ parameters:
   imageDirectoryBlog: "%kernel.project_dir%/public/images/blogs"
   imageDirectoryCV: "%kernel.project_dir%/public/cv"
   imageDirectoryPDP: "%kernel.project_dir%/public/images/pdp"
+  logoDirectoryPDP: "%kernel.project_dir%/public/images/logo"
   programmeDirectory: "%kernel.project_dir%/public/programmes"
+  factureDirectory: "%kernel.project_dir%/public/factures"
   stripeSecretKey: '%env(STRIPE_SECRET_KEY)%'
 
 services:

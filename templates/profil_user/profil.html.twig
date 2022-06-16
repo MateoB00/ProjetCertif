@@ -50,6 +50,10 @@
 								</a>
 							</p>
 						{% endif %}
+						{% if app.user.attenteduncoach %}
+							<p>Tu es en attente d'un coach, dans très peu de temps tu seras contacter par un coach.
+							</p>
+						{% endif %}
 						<a class="btn inputBtn2" href="{{ path('app_update_self_user', {id: app.user.id}) }}">Modifier ton profil</a>
 						<a class="btn inputBtn2" style="background-color: #56baed" href="{{ path('app_update_self_mdp_user', {id: app.user.id}) }}">Modifier ton MDP</a>
 					</div>

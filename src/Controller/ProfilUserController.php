@@ -21,10 +21,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfilUserController extends AbstractController {
-    #[Route('/profil/{user}', name: 'app_profil')]
-    public function index(User $user): Response {
+    #[Route('/profil', name: 'app_profil')]
+    public function index(): Response {
 
-        return $this->render('profil_user/profil.html.twig', []);
+        return $this->render('profil_user/profil.html.twig');
     }
 
     #[Route('/user/update/{id}', name: 'app_update_self_user')]
