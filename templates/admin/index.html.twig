@@ -12,7 +12,7 @@
 			<div class="col-12 w-75 mx-auto">
 				<label class="mb-3">Changer le statut de tous les utilisateurs</label>
 				<select id="liste" onchange="valueSelect()" class="form-control form-control-sm" style="background-color:grey;">
-					<option></option>
+					<option class="text-center">-- Selectionner --</option>
 					{% for user in users %}
 						<option value="{{ user.id }}">Nom -
 							{{ user.nom|upper }}
@@ -32,7 +32,7 @@
 				<div class="col-12 mx-auto">
 					<label class="mb-3">Changer le statut de tous les coachs</label>
 					<select id="liste2" onchange="valueSelect2()" class="form-control form-control-sm" style="background-color:grey;">
-						<option></option>
+						<option class="text-center">-- Selectionner --</option>
 						{% for user in users %}
 							{% if user.estcoach > 0 %}
 								<option value="{{ user.id }}">Nom -
@@ -58,7 +58,7 @@
 				<div class="col-12 mx-auto">
 					<label class="mb-3">Modifier les produits</label>
 					<select id="liste3" onchange="valueSelect3()" class="form-control form-control-sm" style="background-color:grey;">
-						<option></option>
+						<option class="text-center">-- Selectionner --</option>
 						{% for produit in produits %}
 							<option value="{{ produit.id }}">Nom -
 								{{ produit.nom|upper }}
@@ -78,7 +78,7 @@
 					<div class="col-12  mx-auto">
 						<label class="mb-3">Modifier les blogs</label>
 						<select id="liste4" onchange="valueSelect4()" class="form-control form-control-sm" style="background-color:grey;">
-							<option></option>
+							<option class="text-center">-- Selectionner --</option>
 							{% for blog in blogs %}
 								<option value="{{ blog.id }}">Nom -
 									{{ blog.titre|upper }}
@@ -97,7 +97,7 @@
 							<div class="col-12  mx-auto">
 								<label class="mb-3">Ajouter une partie de blog à un blog séléctionner</label>
 								<select id="liste5" onchange="valueSelect5()" class="form-control form-control-sm" style="background-color:grey;">
-									<option></option>
+									<option class="text-center">-- Selectionner --</option>
 									{% for blog in blogs %}
 										<option value="{{ blog.id }}">Nom -
 											{{ blog.titre|upper }}
@@ -115,6 +115,7 @@
 								<a class="btn btn-primary mt-3" href="{{ path('app_blog_index') }}">Liste des blogs</a>
 								<a class="btn btn-primary mt-3" href="{{ path('app_partieblog_index') }}">Liste des parties de blogs</a>
 								<a class="btn btn-primary mt-3" href="{{ path('app_produit_index') }}">Liste des produits</a>
+								<a class="btn btn-primary mt-3" href="{{ path('app_commande_index') }}">Liste des commandes</a>
 
 
 							</section>

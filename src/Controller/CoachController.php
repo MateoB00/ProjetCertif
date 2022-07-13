@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Repository\UserRepository;
+use App\Repository\AbonnementRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,26 +13,60 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachController extends AbstractController {
     #[Route('/coach', name: 'app_options_coach')]
-    public function index(UserRepository $ur): Response {
-        $usersEnAttente = $ur->findby([
-            'attente_dun_coach' => 1
+    public function index(AbonnementRepository $ar, UserRepository $ur): Response {
+        $adherents = $ar->findBy([
+            'coach' => $this->getUser(),
+            'finAbonnement' => null
         ]);
-        $adherents = $ur->findBy([
-            'toncoach' => $this->getUser()
+
+        $abonnements = $ar->findBy([
+            'debutAbonnement' => null
         ]);
-        return $this->render('profil_coach/profil.html.twig', compact('usersEnAttente', 'adherents'));
+        return $this->render('profil_coach/profil.html.twig', compact('adherents', 'abonnements'));
     }
+
     #[Route('/coach/adherent', name: 'app_form_coach')]
-    public function formCoach(Request $request): Response {
+    public function formCoach(UserRepository $ur, Request $request, AbonnementRepository $ar, EntityManagerInterface $em): Response {
 
         $requestAdherentEnAttente = $request->request->get('idAdherentEnAttente');
         $requestAdherent = $request->request->get('idAdherent');
 
-        if ($requestAdherentEnAttente) {
+
+
+
+
+        if ($requestAdherentEnAttente && $this->isCsrfTokenValid('token', $request->request->get('_token'))) {
+            // dd($request->request->get('_token'));
+            $abonnement = $ar->findOneBy([
+                'user' => $requestAdherentEnAttente,
+                'debutAbonnement' => null
+            ]);
+            $user = $ur->findOneBy([
+                'id' => $requestAdherentEnAttente
+            ]);
+            $coach = $this->getUser();
+            $abonnement->setDebutAbonnement(new DateTime());
+            $abonnement->setCoach($coach);
+            $abonnement->setEncours(1);
+
+            $user->setAttenteDunCoach(0);
+
+            $em->persist($abonnement);
+            $em->flush();
+            $em->persist($user);
+            $em->flush();
         }
-        if ($requestAdherent) {
+        if ($requestAdherent && $this->isCsrfTokenValid('token', $request->request->get('_token'))) {
+            $abonnement = $ar->findOneBy([
+                'user' => $requestAdherent,
+                'finAbonnement' => null
+            ]);
+            $abonnement->setEnCours(0);
+            $abonnement->setFinAbonnement(new DateTime());
+
+            $em->persist($abonnement);
+            $em->flush();
         }
-        dd($requestAdherent, $requestAdherentEnAttente);
 
         return $this->redirectToRoute('app_options_coach');
     }

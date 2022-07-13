@@ -46,15 +46,16 @@
 						{% if app.user.toncoach %}
 							<p>Ton coach :
 								<a class="clickcoach" href="{{ path('app_ton_coach', {user: app.user.toncoach.id}) }}">
-									{{ app.user.toncoach.NomEtPrenom}}
+									{{app.user.toncoach.NomEtPrenom}}
 								</a>
 							</p>
 						{% endif %}
 						{% if app.user.attenteduncoach %}
-							<p>Tu es en attente d'un coach, dans très peu de temps tu seras contacter par un coach.
+							<p>Tu es en attente d'un coach, dans très peu de temps tu seras contacter.
 							</p>
 						{% endif %}
-						<a class="btn inputBtn2" href="{{ path('app_update_self_user', {id: app.user.id}) }}">Modifier ton profil</a>
+						<a class="btn inputBtn2" href="{{ path('app_update_self_user', {id: app.user.id}) }}">Modifier ton
+													profil</a>
 						<a class="btn inputBtn2" style="background-color: #56baed" href="{{ path('app_update_self_mdp_user', {id: app.user.id}) }}">Modifier ton MDP</a>
 					</div>
 
@@ -88,10 +89,12 @@
 									<a href="{{ path("app_profil", {user: app.user.id}) }}" class="btn inputBtn list-group-item list-group-item-action active">Accueil</a>
 								</div>
 								<div class="list-group pe-3 ">
-									<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action">Boîte de réception ({{ app.user.received|length }})</a>
+									<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action">Boîte de réception ({{
+									app.user.received|length }})</a>
 								</div>
 								<div class="list-group pe-3">
-									<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{ app.user.sent|length }})</a>
+									<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{
+									app.user.sent|length }})</a>
 								</div>
 								<div class="list-group pe-3">
 									<a href="{{path("send")}}" class="btn inputBtn list-group-item list-group-item-action mt-5">Envoyer un message

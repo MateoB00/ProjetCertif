@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande
+{% endblock %}
+
+{% block body %}
+	<h1>Commande</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ commande.id }}</td>
+			</tr>
+			<tr>
+				<th>Reference</th>
+				<td>{{ commande.reference }}</td>
+			</tr>
+			<tr>
+				<th>Token</th>
+				<td>{{ commande.token }}</td>
+			</tr>
+			<tr>
+				<th>Produits</th>
+
+				<td>
+					{% for panier in commande.paniers %}
+						{{ panier.produit.nom }}
+						-
+					{% endfor %}
+				</td>
+
+			</tr>
+			<tr>
+				<th>CreerA</th>
+				<td>{{ commande.creerA ? commande.creerA|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>Etat</th>
+				<td>{{ commande.etat }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_commande_index') }}">back to list</a>
+
+
+{% endblock %}

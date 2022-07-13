@@ -8,6 +8,7 @@ use App\Entity\Blog;
 use App\Entity\User;
 use App\Form\BlogType;
 use App\Entity\Produit;
+use App\Entity\Commande;
 use App\Form\ProduitType;
 use App\Entity\Partieblog;
 use App\Form\PartieblogType;
@@ -18,6 +19,7 @@ use App\Repository\BlogRepository;
 use App\Repository\UserRepository;
 use App\Repository\CoachRepository;
 use App\Repository\ProduitRepository;
+use App\Repository\CommandeRepository;
 use App\Repository\PartieblogRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,11 +34,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/admin')]
 
-class AdminController extends AbstractController
-{
+class AdminController extends AbstractController {
     #[Route('/admin', name: 'app_choiceuser')]
-    public function index(UserRepository $ur, ProduitRepository $pr, BlogRepository $br): Response
-    {
+    public function index(UserRepository $ur, ProduitRepository $pr, BlogRepository $br): Response {
 
         $users = $ur->findAll();
         $produits = $pr->findAll();
@@ -59,8 +59,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/user/update/{id}', name: 'app_updateuser')]
-    public function updateUser($id, UserRepository $ur, Request $request): Response
-    {
+    public function updateUser($id, UserRepository $ur, Request $request): Response {
         $user = $ur->find($id);
         // dd($user);
         $formulaire = $this->createForm(UpdateAdminUserType::class, $user);
@@ -83,8 +82,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/coach/update/{id}', name: 'app_updatecoach')]
-    public function updateCoach($id, UserRepository $cr, Request $request): Response
-    {
+    public function updateCoach($id, UserRepository $cr, Request $request): Response {
         $coach = $cr->find($id);
         $formulaire = $this->createForm(CoachUpdateType::class, $coach);
         $formulaire->handleRequest($request);
@@ -132,8 +130,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/nouveau_produit', name: 'app_produit_nouveau', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProduitRepository $produitRepository): Response
-    {
+    public function new(Request $request, ProduitRepository $produitRepository): Response {
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
@@ -176,8 +173,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/produit', name: 'app_produit_index', methods: ['GET'])]
-    public function listeProduit(ProduitRepository $pr): Response
-    {
+    public function listeProduit(ProduitRepository $pr): Response {
         return $this->render('admin/produit/index.html.twig', [
             'produits' => $pr->findAll(),
         ]);
@@ -188,8 +184,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/produit/{id}', name: 'app_produit_show', methods: ['GET'])]
-    public function showProduit(Produit $produit): Response
-    {
+    public function showProduit(Produit $produit): Response {
         return $this->render('admin/produit/show.html.twig', [
             'produit' => $produit,
         ]);
@@ -200,8 +195,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/produit/edit/{id}', name: 'app_produit_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
-    {
+    public function edit(Request $request, Produit $produit, ProduitRepository $produitRepository): Response {
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
@@ -243,8 +237,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/delete/produit/{id}', name: 'app_produit_delete', methods: ['POST'])]
-    public function delete(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
-    {
+    public function delete(Request $request, Produit $produit, ProduitRepository $produitRepository): Response {
         if ($this->isCsrfTokenValid('delete' . $produit->getId(), $request->request->get('_token'))) {
             $produitRepository->remove($produit);
         }
@@ -267,8 +260,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/blog/new/{user}', name: 'app_blog_new', methods: ['GET', 'POST'])]
-    public function newBlog(Request $request, BlogRepository $blogRepository, User $user): Response
-    {
+    public function newBlog(Request $request, BlogRepository $blogRepository, User $user): Response {
         $blog = new Blog();
         $blog->setAuteur($user);
         $blog->setDate(new DateTime);
@@ -312,8 +304,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/nos_blogs', name: 'app_blog_index', methods: ['GET'])]
-    public function listeBlogs(BlogRepository $blogRepository): Response
-    {
+    public function listeBlogs(BlogRepository $blogRepository): Response {
         return $this->render('admin/blog/index.html.twig', [
             'blogs' => $blogRepository->findAll(),
         ]);
@@ -326,8 +317,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/blog/{id}', name: 'app_blog_show', methods: ['GET'])]
-    public function detailsBlog(Blog $blog): Response
-    {
+    public function detailsBlog(Blog $blog): Response {
         return $this->render('admin/blog/show.html.twig', [
             'blog' => $blog,
         ]);
@@ -340,8 +330,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/blog/edit/{id}', name: 'app_blog_edit', methods: ['GET', 'POST'])]
-    public function editBlog(Request $request, Blog $blog, BlogRepository $blogRepository): Response
-    {
+    public function editBlog(Request $request, Blog $blog, BlogRepository $blogRepository): Response {
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
@@ -382,8 +371,8 @@ class AdminController extends AbstractController
      */
 
     #[Route('/delete/blog/{id}', name: 'app_blog_delete', methods: ['POST'])]
-    public function deleteBlog(Request $request, Blog $blog, BlogRepository $blogRepository): Response
-    {
+    public function deleteBlog(Request $request, Blog $blog, BlogRepository $blogRepository): Response {
+
         if ($this->isCsrfTokenValid('delete' . $blog->getId(), $request->request->get('_token'))) {
             $blogRepository->remove($blog);
         }
@@ -406,8 +395,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/parties_blog/new/{blog}', name: 'app_partieblog_new', methods: ['GET', 'POST'])]
-    public function newPartieBlog(Request $request, PartieblogRepository $partieblogRepository, Blog $blog, BlogRepository $br): Response
-    {
+    public function newPartieBlog(Request $request, PartieblogRepository $partieblogRepository, Blog $blog, BlogRepository $br): Response {
         $partieblog = new Partieblog();
         $partieblog->setBlog($blog);
         $form = $this->createForm(PartieblogType::class, $partieblog);
@@ -434,8 +422,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/parties_blog', name: 'app_partieblog_index', methods: ['GET'])]
-    public function listePartiesBlogs(PartieblogRepository $partieblogRepository): Response
-    {
+    public function listePartiesBlogs(PartieblogRepository $partieblogRepository): Response {
         return $this->render('admin/partieblog/index.html.twig', [
             'partieblogs' => $partieblogRepository->findAll(),
         ]);
@@ -446,9 +433,8 @@ class AdminController extends AbstractController
      * Details d'une partie de blog
      */
 
-    #[Route('/{id}', name: 'app_partieblog_show', methods: ['GET'])]
-    public function showPartieBlog(Partieblog $partieblog): Response
-    {
+    #[Route('/partie_blog/{id}', name: 'app_partieblog_show', methods: ['GET'])]
+    public function showPartieBlog(Partieblog $partieblog): Response {
         return $this->render('admin/partieblog/show.html.twig', [
             'partieblog' => $partieblog,
         ]);
@@ -458,9 +444,8 @@ class AdminController extends AbstractController
      * Modifier une partie de blog
      */
 
-    #[Route('/{id}/edit/', name: 'app_partieblog_edit', methods: ['GET', 'POST'])]
-    public function editPartieBlog(Request $request, Partieblog $partieblog, PartieblogRepository $partieblogRepository): Response
-    {
+    #[Route('/partie_blog/{id}/edit/', name: 'app_partieblog_edit', methods: ['GET', 'POST'])]
+    public function editPartieBlog(Request $request, Partieblog $partieblog, PartieblogRepository $partieblogRepository): Response {
         $form = $this->createForm(PartieblogType::class, $partieblog);
         $form->handleRequest($request);
 
@@ -480,12 +465,46 @@ class AdminController extends AbstractController
      */
 
     #[Route('/{id}', name: 'app_partieblog_delete', methods: ['POST'])]
-    public function deletePartieBlog(Request $request, Partieblog $partieblog, PartieblogRepository $partieblogRepository): Response
-    {
+    public function deletePartieBlog(Request $request, Partieblog $partieblog, PartieblogRepository $partieblogRepository): Response {
         if ($this->isCsrfTokenValid('delete' . $partieblog->getId(), $request->request->get('_token'))) {
             $partieblogRepository->remove($partieblog);
         }
 
         return $this->redirectToRoute('app_partieblog_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * COMMANDES
+     */
+
+    #[Route('/commandes', name: 'app_commande_index', methods: ['GET'])]
+    public function listeCommandes(CommandeRepository $commandeRepository): Response {
+        return $this->render('admin/commande/index.html.twig', [
+            'commandes' => $commandeRepository->findAll(),
+        ]);
+    }
+
+    /*
+    * Détails commande
+    */
+
+    #[Route('/commande/{id}', name: 'app_commande_show', methods: ['GET'])]
+    public function showCommandes(Commande $commande): Response {
+        return $this->render('admin/commande/show.html.twig', [
+            'commande' => $commande,
+        ]);
+    }
+
+    /*
+    * Supprimer commande
+    */
+
+    #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
+    public function deleteCommande(Request $request, Commande $commande, CommandeRepository $commandeRepository): Response {
+        if ($this->isCsrfTokenValid('delete' . $commande->getId(), $request->request->get('_token'))) {
+            $commandeRepository->remove($commande);
+        }
+
+        return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 }

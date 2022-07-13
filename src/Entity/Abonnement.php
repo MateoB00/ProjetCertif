@@ -32,6 +32,9 @@ class Abonnement {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $debutAbonnement;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $finAbonnement;
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -94,6 +97,18 @@ class Abonnement {
     public function setDebutAbonnement(?\DateTimeInterface $debutAbonnement): self
     {
         $this->debutAbonnement = $debutAbonnement;
+
+        return $this;
+    }
+
+    public function getFinAbonnement(): ?\DateTimeInterface
+    {
+        return $this->finAbonnement;
+    }
+
+    public function setFinAbonnement(?\DateTimeInterface $finAbonnement): self
+    {
+        $this->finAbonnement = $finAbonnement;
 
         return $this;
     }

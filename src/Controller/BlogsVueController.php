@@ -13,11 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class BlogsVueController extends AbstractController
-{
+class BlogsVueController extends AbstractController {
     #[Route('/blogs', name: 'app_blog')]
-    public function liste(BlogRepository $br, CategorieRepository $cr): Response
-    {
+    public function liste(BlogRepository $br, CategorieRepository $cr): Response {
 
         return $this->render('blog/blogs.html.twig', [
             'blogs' => $br->findAll(),
@@ -26,8 +24,7 @@ class BlogsVueController extends AbstractController
     }
 
     #[Route('/blog/details/{blog}', name: 'app_blog_details')]
-    public function details(Blog $blog, EntityManagerInterface $em, BlogRepository $br, Request $request): Response
-    {
+    public function details(Blog $blog, EntityManagerInterface $em, BlogRepository $br, Request $request): Response {
 
 
         $commentaire = new Commentaire;
@@ -49,5 +46,15 @@ class BlogsVueController extends AbstractController
             'blogs' => $blogs,
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/blog/commentaire/delete/{id}', name: 'app_blog_commentaire_delete')]
+    public function deleteCommentaire(Commentaire $commentaire, Request $request, EntityManagerInterface $em): Response {
+
+        if ($this->isCsrfTokenValid('deleteCommentaire', $request->request->get('_token'))) {
+            $em->remove($commentaire);
+            $em->flush();
+        }
+        return $this->redirectToRoute('app_blog_details', ['blog' => $commentaire->getBlog()->getId()]);
     }
 }

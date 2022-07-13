@@ -39,54 +39,55 @@
 							<td class="{{bold}}">{{ message.expediteur.email }}</td>
 							<td class="{{bold}}">{{ message.titre }}</td>
 							<td class="{{bold}}">{{ message.creerA|date }}</td>
-							<td class="text-center">
-								<a class='btn btn-info btn-xs' href="{{ path("read", {id: message.id}) }}">
-									<i class="fa-solid fa-eye"></i>
-								</a>
-								<a href="{{ path("delete_message", {id: message.id}) }}" class="btn btn-danger btn-xs">
-									<i class="fa-solid fa-trash"></i>
-								</a>
-							</td>
+							<form method='post' action="{{ path("delete_message", {id: message.id}) }}">
+								<input type="hidden" name="_token" value="{{ csrf_token('deleteMessage') }}">
+								<td class="text-center">
+									<a class='btn btn-info btn-xs' href="{{ path("read", {id: message.id}) }}">
+										<i class="fa-solid fa-eye"></i>
+									</a>
+									<button type="submit" class="btn btn-danger btn-xs">
+										<i class="fa-solid fa-trash"></i>
+									</button>
+								</td>
+							</form>
+						</td>
 
-						</tr>
+					</tr>
 
-					{% endfor %}
+				{% endfor %}
 
-				</table>
-			</div>
+			</table>
 		</div>
+	</div>
 
-		<div class="col-md-12 d-flex justify-content-center">
-			<a class="btn inputBtn d-flex align-items-center" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-				Voir ma messagerie
-			</a>
-			<a href="{{path("send")}}" class="btn inputBtn">Envoyer un message
+	<div class="col-md-12 d-flex justify-content-center">
+		<a class="btn inputBtn d-flex align-items-center" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+			Voir ma messagerie
+		</a>
+		<a href="{{path("send")}}" class="btn inputBtn">Envoyer un message
+			<i class="ps-2 fa-solid fa-message"></i>
+		</a>
+	</div>
+</div></section><div class="row align-items-end" style="margin-bottom: 9rem;">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+	<div class="offcanvas-header">
+		<h2 class="offcanvas-title" id="offcanvasExampleLabel">Ma Messagerie</h2>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+		<div class="list-group pe-3">
+			<a href="{{ path("app_profil", {user: app.user.id}) }}" class="btn inputBtn list-group-item list-group-item-action ">Accueil</a>
+		</div>
+		<div class="list-group pe-3">
+			<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action active">Boîte de réception ({{ app.user.received|length }})</a>
+		</div>
+		<div class="list-group pe-3">
+			<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{ app.user.sent|length }})</a>
+		</div>
+		<div class="list-group pe-3">
+			<a href="{{path("send")}}" class="btn inputBtn list-group-item list-group-item-action mt-5">Envoyer un message
 				<i class="ps-2 fa-solid fa-message"></i>
 			</a>
 		</div>
 	</div>
-</section>
-<div class="row align-items-end" style="margin-bottom: 9rem;">
-	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-		<div class="offcanvas-header">
-			<h2 class="offcanvas-title" id="offcanvasExampleLabel">Ma Messagerie</h2>
-			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-		</div>
-		<div class="offcanvas-body">
-			<div class="list-group pe-3">
-				<a href="{{ path("app_profil", {user: app.user.id}) }}" class="btn inputBtn list-group-item list-group-item-action ">Accueil</a>
-			</div>
-			<div class="list-group pe-3">
-				<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action active">Boîte de réception ({{ app.user.received|length }})</a>
-			</div>
-			<div class="list-group pe-3">
-				<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{ app.user.sent|length }})</a>
-			</div>
-			<div class="list-group pe-3">
-				<a href="{{path("send")}}" class="btn inputBtn list-group-item list-group-item-action mt-5">Envoyer un message
-					<i class="ps-2 fa-solid fa-message"></i>
-				</a>
-			</div>
-		</div>
-	</div>
-</div>{% endblock %}
+</div></div>{% endblock %}

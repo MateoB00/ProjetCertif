@@ -13,6 +13,8 @@ class HomeController extends AbstractController {
         $coachs = $ur->findBy([
             'estcoach' => 1
         ]);
+
+
         return $this->render('home/home.html.twig', [
             'coachs' => $coachs
         ]);

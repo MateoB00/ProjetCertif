@@ -10,53 +10,57 @@
 {% endblock %}
 
 {% block body %}
-	<section class="container">
-		<div class="row">
-			<div class="col-12">
-				<h1 class="fs-3 text-center my-3">Sujet :
-					{{ message.titre }}
-				</h1>
-				<div class="d-flex justify-content-between my-5">
-					<span>Message de :
-						{{ message.expediteur.nom|upper }}
-						-
-						{{ message.expediteur.prenom }}</span>
-					<span>Le
-						{{ message.creera|date }}</span>
-				</div>
-				<div class="mb-5 carre_1">{{ message.message }}</div>
-				<div class="col-md-12 d-flex justify-content-center">
-					<a class="btn inputBtn d-flex align-items-center" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-						Voir ma messagerie
-					</a>
-					<a href="{{path("send_answer", {user: message.expediteur.id})}}" class="btn inputBtn">Répondre
-						<i class="ps-2 fa-solid fa-message"></i>
-					</a>
-				</div>
-			</div>
-		</section>
-		<div class="row align-items-end">
-			<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-				<div class="offcanvas-header">
-					<h2 class="offcanvas-title" id="offcanvasExampleLabel">Ma Messagerie</h2>
-					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-				</div>
-				<div class="offcanvas-body">
-					<div class="list-group pe-3">
-						<a href="{{ path("app_profil", {user: app.user.id}) }}" class="btn inputBtn list-group-item list-group-item-action ">Accueil</a>
+	{% if app.user.id == message.destinataire.id or app.user.id == message.expediteur.id %}
+		<section class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="fs-3 text-center my-3">Sujet :
+						{{ message.titre }}
+					</h1>
+					<div class="d-flex justify-content-between my-5">
+						<span>Message de :
+							{{ message.expediteur.nom|upper }}
+							-
+							{{ message.expediteur.prenom }}</span>
+						<span>Le
+							{{ message.creera|date }}</span>
 					</div>
-					<div class="list-group pe-3">
-						<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action active">Boîte de réception ({{ app.user.received|length }})</a>
-					</div>
-					<div class="list-group pe-3">
-						<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{ app.user.sent|length }})</a>
-					</div>
-					<div class="list-group pe-3">
-						<a href="{{path("send")}}" class="btn inputBtn list-group-item list-group-item-action mt-5">Envoyer un message
+					<div class="mb-5 carre_1">{{ message.message }}</div>
+					<div class="col-md-12 d-flex justify-content-center">
+						<a class="btn inputBtn d-flex align-items-center" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+							Voir ma messagerie
+						</a>
+						<a href="{{path("send_answer", {user: message.expediteur.id})}}" class="btn inputBtn">Répondre
 							<i class="ps-2 fa-solid fa-message"></i>
 						</a>
 					</div>
 				</div>
+			</section>
+			<div class="row align-items-end">
+				<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+					<div class="offcanvas-header">
+						<h2 class="offcanvas-title" id="offcanvasExampleLabel">Ma Messagerie</h2>
+						<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+					</div>
+					<div class="offcanvas-body">
+						<div class="list-group pe-3">
+							<a href="{{ path("app_profil", {user: app.user.id}) }}" class="btn inputBtn list-group-item list-group-item-action ">Accueil</a>
+						</div>
+						<div class="list-group pe-3">
+							<a href="{{ path("received") }}" class="btn inputBtn list-group-item list-group-item-action active">Boîte de réception ({{ app.user.received|length }})</a>
+						</div>
+						<div class="list-group pe-3">
+							<a href="{{ path("sent") }}" class="btn inputBtn list-group-item list-group-item-action">Eléments envoyés ({{ app.user.sent|length }})</a>
+						</div>
+						<div class="list-group pe-3">
+							<a href="{{path("send")}}" class="btn inputBtn list-group-item list-group-item-action mt-5">Envoyer un message
+								<i class="ps-2 fa-solid fa-message"></i>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+		{% else %}
+			<p>Qu'est ce que tu fais ici ?</p>
+		{% endif %}
 	{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande index
+{% endblock %}
+
+{% block body %}
+	<h1>Commande index</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Reference</th>
+				<th>Token</th>
+				<th>CreerA</th>
+				<th>Etat</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for commande in commandes %}
+				<tr>
+					<td>{{ commande.id }}</td>
+					<td>{{ commande.reference }}</td>
+					<td>{{ commande.token }}</td>
+					<td>{{ commande.creerA ? commande.creerA|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ commande.etat }}</td>
+					<td>
+						<a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}

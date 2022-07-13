@@ -24,6 +24,12 @@ class ProfilUserController extends AbstractController {
     #[Route('/profil', name: 'app_profil')]
     public function index(): Response {
 
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'En forme ? Soit prêt à tout casser !');
+
+            return $this->redirectToRoute('app_login');
+        }
+
         return $this->render('profil_user/profil.html.twig');
     }
 
@@ -33,7 +39,8 @@ class ProfilUserController extends AbstractController {
         $formulaire = $this->createForm(UpdatebyUserType::class, $user);
         $formulaire->handleRequest($request);
 
-        if ($formulaire->isSubmitted() && $formulaire->isValid()) {
+
+        if ($formulaire->isSubmitted() && $formulaire->isValid() && $this->isCsrfTokenValid('updateProfil', $request->request->get('_token'))) {
 
             $ur->add($user);
 
@@ -69,7 +76,7 @@ class ProfilUserController extends AbstractController {
         $formulaire = $this->createForm(ChangePasswordType::class, $user);
         $formulaire->handleRequest($request);
 
-        if ($formulaire->isSubmitted() && $formulaire->isValid()) {
+        if ($formulaire->isSubmitted() && $formulaire->isValid() && $this->isCsrfTokenValid('updatePassword', $request->request->get('_token'))) {
             $oldPassword = $formulaire->get("oldPassword")->getData();
             $newPassword = $formulaire->get("plainPassword")->getData();
 
@@ -116,7 +123,7 @@ class ProfilUserController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->isCsrfTokenValid('sendMessage', $request->request->get('_token'))) {
             $message->setExpediteur($this->getUser());
 
             $em->persist($message);
@@ -140,7 +147,7 @@ class ProfilUserController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->isCsrfTokenValid('sendMessageCoach', $request->request->get('_token'))) {
             $message->setDestinataire($user);
             $message->setExpediteur($this->getUser());
 
@@ -166,7 +173,7 @@ class ProfilUserController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->isCsrfTokenValid('sendMessageAnswer', $request->request->get('_token'))) {
             $message->setDestinataire($user);
             $message->setExpediteur($this->getUser());
 
@@ -218,10 +225,14 @@ class ProfilUserController extends AbstractController {
     /**
      * @Route("/delete/message/{id}", name="delete_message")
      */
-    public function deleteMessage(Messages $message, EntityManagerInterface $em): Response {
+    public function deleteMessage(Messages $message, EntityManagerInterface $em, Request $request): Response {
 
-        $em->remove($message);
-        $em->flush();
+        $user = $this->getUser();
+
+        if ($this->isCsrfTokenValid('deleteMessage', $request->request->get('_token')) && [$user == $message->getExpediteur() || $user == $message->getExpediteur()]) {
+            $em->remove($message);
+            $em->flush();
+        }
 
         return $this->redirectToRoute("received");
     }

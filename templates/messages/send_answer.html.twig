@@ -19,6 +19,8 @@
 					{{ form_start(form) }}
 					{{ form_row(form.titre) }}
 					{{ form_row(form.message) }}
+					<input type="hidden" name="_token" value="{{ csrf_token('sendMessageAnswer') }}">
+
 					{{ form_end(form) }}
 				</div>
 			</div>

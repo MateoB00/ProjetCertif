@@ -19,6 +19,7 @@
 					{{ form_row(form.titre) }}
 					{{ form_row(form.message) }}
 					{{ form_row(form.destinataire) }}
+					<input type="hidden" name="_token" value="{{ csrf_token('sendMessage') }}">
 					{{ form_end(form) }}
 				</div>
 			</div>
