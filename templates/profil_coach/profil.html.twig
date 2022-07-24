@@ -17,7 +17,7 @@
 			<section class="container py-5">
 				<div class="border-bottom border-3 border1 pb-5">
 					<div class="col-12 w-50 mx-auto">
-						<h1 class="fs-2 border-bottom border-3 pb-3 mb-5">Veillez à lire les conditions avant de choisir un adhérent 
+						<h1 class="fs-2 border-bottom border-3 pb-3 mb-5">Veillez à lire <a style='text-decoration:none' href='{{ path('app_conditions_coach') }}'>les conditions</a> avant de choisir un adhérent 
 																																																																													!</h1>
 					</div>
 					<div class="row">
@@ -56,7 +56,7 @@
 																				<input type="hidden" name="_token" value="{{ csrf_token('token') }}">
 																			</input>
 																			<p>Tu veux le prendre sous ton aile ?</p>
-																			<button type="submit" onclick="return confirm('Es-tu sûr ?')">Envoyer
+																			<button class="inputBtn" type="submit" onclick="return confirm('Es-tu sûr ?')">Envoyer
 																			</button>
 																		</div>
 																		<!--enditem-->
@@ -133,7 +133,7 @@
 																				<p>Fin de l'abonnement pour cet adhérent ?</p>
 																				<input type="hidden" name="idAdherent" value="{{adherent.user.id}}">
 																				<input type="hidden" name="_token" value="{{ csrf_token('token') }}">
-																				<button type="submit" onclick="return confirm('Es-tu sûr ?')">Envoyer</button>
+																				<button class="inputBtn" type="submit" onclick="return confirm('Es-tu sûr ?')">Envoyer</button>
 																			</div>
 																			<!--enditem-->
 																		</div>

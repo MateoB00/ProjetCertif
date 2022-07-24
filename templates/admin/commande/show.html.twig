@@ -13,6 +13,10 @@
 				<td>{{ commande.id }}</td>
 			</tr>
 			<tr>
+				<th>UserId</th>
+				<td><a href='{{ path('app_updateuser', {id: commande.user.id}) }}'>{{ commande.user.id }}</a></td>
+			</tr>
+			<tr>
 				<th>Reference</th>
 				<td>{{ commande.reference }}</td>
 			</tr>

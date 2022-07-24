@@ -22,7 +22,7 @@
 					</h1>
 				</div>
 
-				<p class="lead w-75 mx-auto text-center">{{ blog.resume }}
+				<p class="lead w-75 mx-auto text-center">{{ blog.description }}
 				</p>
 
 				<div class="row">
@@ -56,7 +56,7 @@
 
 
 											<h1 class="titre_partie mb-4">{{partieblog.titrepartie }}</h1>
-											<p class="lead {{ (loop.last) ? 'pb-4' : '' }}">{{ partieblog.contenupartie }}</p>
+											<p class="lead mt-5 {{ (loop.last) ? 'pb-4' : '' }}">{{ partieblog.contenupartie }}</p>
 
 										{% endif %}
 									{% endfor %}

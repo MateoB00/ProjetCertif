@@ -10,10 +10,8 @@ use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-class ProduitType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+class ProduitType extends AbstractType {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('nom')
             ->add('prix')
@@ -21,6 +19,8 @@ class ProduitType extends AbstractType
             ->add('contenu')
             ->add('img', FileType::class, [
                 'data_class' => null,
+                'required' => false,
+                'mapped' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '5M',
@@ -31,8 +31,7 @@ class ProduitType extends AbstractType
             ->add('estprogramme');
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => Produit::class,
         ]);

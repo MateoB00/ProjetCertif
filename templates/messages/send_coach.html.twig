@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block body %}
-	{% if app.user.toncoach %}
-		{% if app.user.toncoach == coach %}
+	{% if tonCoach %}
+		{% if tonCoach.coach == coach %}
 			<section class="container">
 				<div class="row">
 					<div class="col-12">

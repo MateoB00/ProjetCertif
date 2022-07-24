@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PaiementController extends AbstractController {
     #[Route('/paiement', name: 'app_paiement')]
-    public function index(SessionInterface $session, ProduitRepository $pr, CommandeRepository $cr, EntityManagerInterface $em): Response {
+    public function index(SessionInterface $session, ProduitRepository $pr, CommandeRepository $cr): Response {
         $panier = $session->get('panier', []);
         Stripe::setApiKey($this->getParameter('stripeSecretKey'));
 
@@ -37,7 +37,7 @@ class PaiementController extends AbstractController {
         $ids = $panier;
         $produits = $pr->getAllProduits($ids);
 
-        // $idUser = $this->getUser()->getId();
+
 
         $commande = new Commande;
         $commande->setEtat('En cours');
@@ -92,7 +92,7 @@ class PaiementController extends AbstractController {
         $produits = $pr->getAllProduits($ids);
 
 
-        // dd($produits);
+
 
         if (empty($commande)) throw new AccessDeniedHttpException;
 
@@ -106,11 +106,10 @@ class PaiementController extends AbstractController {
 
 
             $total += $produit->getPrix() * $quantite['quantite'];
-            // dd($user->getEmail());
-            // $programmes = $produits[$id]->getEstprogramme() === true;
+
 
             if ($produit->getEstprogramme() === true) {
-                // dd($produit);
+
                 $email = new TemplatedEmail();
 
                 $pathProgramme = $this->getParameter('programmeDirectory') . '/' . $produit->getNom() . '.pdf';
@@ -119,13 +118,10 @@ class PaiementController extends AbstractController {
                     ->to($user->getEmail())
                     ->replyTo('lerefugedescombattants@gmail.com')
                     ->subject($produit->getNom())
-                    ->htmlTemplate('emails_template/contact.html.twig')
+                    ->htmlTemplate('emails_template/programme.html.twig')
                     ->context([
-                        // 'fromEmail' => $data['email'],
-                        // 'message' => nl2br($data['message']),
-                        // 'tel' => ($data['telephone'])
                         'fromEmail' => 'lerefugedescombattants@gmail.com',
-                        'message' => 'programme'
+                        'message' => 'Merci pour votre confiance ! Vous trouverez en pièce jointe un programme complet ! Si vous avez ne serait-ce qu\'une seule question n\'hésitez surtout pas à nous contacter !'
                     ])
                     ->attachFromPath($pathProgramme, null, 'application/pdf');
 
@@ -182,8 +178,7 @@ class PaiementController extends AbstractController {
 
 
 
-        // if ($produit->getEstprogramme() != 1) {
-        // }
+
 
 
         /*
@@ -239,7 +234,7 @@ class PaiementController extends AbstractController {
                 ->context([
                     'produits' => ($produits),
                     'fromEmail' => 'lerefugedescombattants@gmail.com',
-                    'message' => 'Facture'
+                    'message' => 'Vous trouverez en pièce jointe une facture concernant vos achats ! N\'hésitez pas à nous contactez pour quelconque questions. Récapitulatif des produits achetés :'
                 ])
                 ->attachFromPath($pathFacture, null, 'application/pdf');
 
@@ -261,12 +256,12 @@ class PaiementController extends AbstractController {
 
 
 
+        $session->set('panier', []);
 
-        // $session->set('panier', []);
 
         $cr->add($commande);
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_profil_commande');
     }
 
 

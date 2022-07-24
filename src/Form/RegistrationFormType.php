@@ -73,19 +73,9 @@ class RegistrationFormType extends AbstractType {
                         'message' => 'Votre mot de passe doit contenir au moins un caractère spécial.'
                     ]),
                 ],
-                'attr' => ['autocomplete' => 'new-password'],
                 'attr' => [
                     'class' => 'input',
                     'placeholder' => 'Mot de passe *'
-                ],
-                'constraints' => [
-                    new NotBlank,
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
                 ],
             ])
             ->add('adresse', TextType::class, [

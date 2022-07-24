@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}A propos de nous !
+{% block title %}Profil
 {% endblock %}
 {% block css %}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -41,12 +41,13 @@
 							{{ app.user.prenom}}</p>
 						<p>Numéro de téléphone :
 							{{ app.user.numtel}}</p>
-						<p class="border-bottom border-3 pb-3">Email :
+						<p class="">Email :
 							{{ app.user.email}}</p>
-						{% if app.user.toncoach %}
+						<p class="border-bottom border-3 pb-3"><a style='text-decoration:none; color: #56baed' href='{{ path('app_profil_commande') }}'>Tes achats</a></p>
+						{% if userAbonnement %}
 							<p>Ton coach :
-								<a class="clickcoach" href="{{ path('app_ton_coach', {user: app.user.toncoach.id}) }}">
-									{{app.user.toncoach.NomEtPrenom}}
+								<a class="clickcoach" href="{{ path('app_ton_coach', {user: userAbonnement.coach.id}) }}">
+									{{userAbonnement.coach.nom}}
 								</a>
 							</p>
 						{% endif %}
@@ -55,8 +56,8 @@
 							</p>
 						{% endif %}
 						<a class="btn inputBtn2" href="{{ path('app_update_self_user', {id: app.user.id}) }}">Modifier ton
-													profil</a>
-						<a class="btn inputBtn2" style="background-color: #56baed" href="{{ path('app_update_self_mdp_user', {id: app.user.id}) }}">Modifier ton MDP</a>
+																																																																												profil</a>
+						<a class="btn inputBtn2" href="{{ path('app_update_self_mdp_user', {id: app.user.id}) }}">Modifier ton MDP</a>
 					</div>
 
 

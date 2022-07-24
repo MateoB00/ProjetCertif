@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions au recrutement d'un adhérent
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link href="{{ asset('css/aboutus.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block body %}
+{% if app.user.estcoach %}
+<section class="container">
+    <div class="text-center">
+        <h1 class="my-4">Conditions au recrutement d'un adhérent.</h1>
+        <p class="lead fs-4">Cette page concerne les conditions à connaître au préalable avec l'adhésion d'un adhérent</p>
+    </div>
+    <div>
+        <p class="lead">1. Veillez à choisir un adhérent autour de votre domicile pour que si, l'adhérent souhaite avoir l'opportunité de vous rencontrer que vous soyez vraiment présent durant son abonnement </p>
+        <p class="lead">2. Si votre adhérent, considère qu'il souhaite changer de coach il le peut. Alors faite en sorte de ne pas les décevoir. Nous aurons tous les retours nécessaires.</p>
+        <p class="lead">3. Si c'est possible essayer de partager vos équipements avec vos adhérents.</p>
+        <p class="lead">4. Un adhérent qui a plusieurs abonnement pris, ce serait préférable qu'un seul coach soit disponible pour les plusieurs abonnements.</p>
+        <p class="lead">5. Votre rémunération, vous sera versé à la fin de chaque abonnement terminé. Si il y a quelconque retard de notre part appellez nous. (+ 33 1 65 42 58 75 ou contact@mateobianco.fr)</p>
+        <p class="lead">6. Vous êtes la représentation de notre plateforme, cette plateforme est la votre autant que la notre. Faites en sorte de projeter une excellente image de vous. Essayez de garder contact avec vos adhérents :)</p>
+    </div>
+        <p class="lead fs-4 text-center">Enjoy les potes !</p>
+
+</section>
+{% else %}
+        <p class="lead fs-4 text-center">????</p>
+{% endif %}
+{% endblock %}

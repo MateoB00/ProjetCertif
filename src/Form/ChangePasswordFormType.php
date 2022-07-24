@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,10 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
-class ChangePasswordFormType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+class ChangePasswordFormType extends AbstractType {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -31,9 +30,23 @@ class ChangePasswordFormType extends AbstractType
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 100,
+                            'max' => 4096,
+                        ]),
+                        new Regex([
+                            'pattern' => '/\d/',
+                            'message' => 'Votre mot de passe doit contenir au moins un chiffre.'
+                        ]),
+                        new Regex([
+                            'pattern' => '/[a-z]/',
+                            'message' => 'Votre mot de passe doit contenir au moins une lettre minuscule.'
+                        ]),
+                        new Regex([
+                            'pattern' => '/[A-Z]/',
+                            'message' => 'Votre mot de passe doit contenir au moins une lettre majuscule.'
+                        ]),
+                        new Regex([
+                            'pattern' => '/[!@#$%^&*]/',
+                            'message' => 'Votre mot de passe doit contenir au moins un caractère spécial.',
                         ]),
                     ],
 
@@ -57,8 +70,7 @@ class ChangePasswordFormType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([]);
     }
 }

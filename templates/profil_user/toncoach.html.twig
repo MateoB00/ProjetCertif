@@ -8,8 +8,8 @@
 	<link href="{{ asset('css/aboutus.css') }}" rel="stylesheet"/>
 {% endblock %}
 {% block body %}
-	{% if app.user.toncoach %}
-		{% if app.user.toncoach == coach %}
+	{% if tonCoach %}
+		{% if tonCoach.coach == coach %}
 			<section class="toncoach pt-4 text-center">
 
 				<div class="container py-5">
@@ -31,7 +31,7 @@
 								<p class="fs-4">Email professionnel :
 									{{ coach.email }}</p>
 							</div>
-							<a href="{{ path("send_coach", {user: app.user.toncoach.id}) }}" class='inputBtn'>Envoyez un message à votre coach</a>
+							<a href="{{ path("send_coach", {user: tonCoach.coach.id}) }}" class='inputBtn'>Envoyez un message à votre coach</a>
 						</div>
 
 					</div>

@@ -9,8 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BlogRepository;
 
 #[ORM\Entity(repositoryClass: BlogRepository::class)]
-class Blog
-{
+class Blog {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -18,9 +17,6 @@ class Blog
 
     #[ORM\Column(type: 'string', length: 255)]
     private $titre;
-
-    #[ORM\Column(type: 'text')]
-    private $contenu;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
@@ -43,97 +39,71 @@ class Blog
     #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Commentaire::class, orphanRemoval: true)]
     private $commentaires;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->date = new \DateTime();
         $this->partieblog = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getTitre(): ?string
-    {
+    public function getTitre(): ?string {
         return $this->titre;
     }
 
-    public function setTitre(string $titre): self
-    {
+    public function setTitre(string $titre): self {
         $this->titre = $titre;
 
         return $this;
     }
 
-    public function getContenu(): ?string
-    {
-        return $this->contenu;
-    }
-
-    public function setContenu(string $contenu): self
-    {
-        $this->contenu = $contenu;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
-    {
+    public function setDescription(?string $description): self {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
+    public function getDate(): ?\DateTimeInterface {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
-    {
+    public function setDate(\DateTimeInterface $date): self {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getCategorie(): ?Categorie
-    {
+    public function getCategorie(): ?Categorie {
         return $this->categorie;
     }
 
-    public function setCategorie(?Categorie $categorie): self
-    {
+    public function setCategorie(?Categorie $categorie): self {
         $this->categorie = $categorie;
 
         return $this;
     }
 
-    public function getImage(): ?string
-    {
+    public function getImage(): ?string {
         return $this->image;
     }
 
-    public function setImage(string $image): self
-    {
+    public function setImage(string $image): self {
         $this->image = $image;
 
         return $this;
     }
 
-    public function getAuteur(): ?User
-    {
+    public function getAuteur(): ?User {
         return $this->auteur;
     }
 
-    public function setAuteur(?User $auteur): self
-    {
+    public function setAuteur(?User $auteur): self {
         $this->auteur = $auteur;
 
         return $this;
@@ -142,13 +112,11 @@ class Blog
     /**
      * @return Collection<int, Partieblog>
      */
-    public function getPartieblog(): Collection
-    {
+    public function getPartieblog(): Collection {
         return $this->partieblog;
     }
 
-    public function addPartieblog(Partieblog $partieblog): self
-    {
+    public function addPartieblog(Partieblog $partieblog): self {
         if (!$this->partieblog->contains($partieblog)) {
             $this->partieblog[] = $partieblog;
             $partieblog->setBlog($this);
@@ -157,8 +125,7 @@ class Blog
         return $this;
     }
 
-    public function removePartieblog(Partieblog $partieblog): self
-    {
+    public function removePartieblog(Partieblog $partieblog): self {
         if ($this->partieblog->removeElement($partieblog)) {
             // set the owning side to null (unless already changed)
             if ($partieblog->getBlog() === $this) {
@@ -169,26 +136,23 @@ class Blog
         return $this;
     }
 
-    public function resume(): string
-    {
+    // public function resume(): string {
 
-        if (strlen($this->contenu) > 5)
-            $resume = substr($this->contenu, 0, 5) . '...';
-        else $resume = $this->contenu;
+    //     if (strlen($this->contenu) > 5)
+    //         $resume = substr($this->contenu, 0, 5) . '...';
+    //     else $resume = $this->contenu;
 
-        return $resume;
-    }
+    //     return $resume;
+    // }
 
     /**
      * @return Collection<int, Commentaire>
      */
-    public function getCommentaires(): Collection
-    {
+    public function getCommentaires(): Collection {
         return $this->commentaires;
     }
 
-    public function addCommentaire(Commentaire $commentaire): self
-    {
+    public function addCommentaire(Commentaire $commentaire): self {
         if (!$this->commentaires->contains($commentaire)) {
             $this->commentaires[] = $commentaire;
             $commentaire->setBlog($this);
@@ -197,8 +161,7 @@ class Blog
         return $this;
     }
 
-    public function removeCommentaire(Commentaire $commentaire): self
-    {
+    public function removeCommentaire(Commentaire $commentaire): self {
         if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
             if ($commentaire->getBlog() === $this) {

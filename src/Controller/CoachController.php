@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use DateTime;
+use App\Entity\Messages;
 use App\Repository\UserRepository;
 use App\Repository\AbonnementRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +37,6 @@ class CoachController extends AbstractController {
 
 
         if ($requestAdherentEnAttente && $this->isCsrfTokenValid('token', $request->request->get('_token'))) {
-            // dd($request->request->get('_token'));
             $abonnement = $ar->findOneBy([
                 'user' => $requestAdherentEnAttente,
                 'debutAbonnement' => null
@@ -51,7 +51,18 @@ class CoachController extends AbstractController {
 
             $user->setAttenteDunCoach(0);
 
+            $message = new Messages;
+
+            $message->setDestinataire($user);
+            $message->setExpediteur($coach);
+            $message->setTitre('Début d\'abonnement !');
+            $message->setMessage('Bonjour, je suis ton nouveau coach, je me présente : ' . $coach->getNom() . ' ' . $coach->getPrenom() . '. N\'hésite pas à m\'envoyer ton numéro de téléphone. Les entraînements seront selon vos disponibilités.');
+
+
+
             $em->persist($abonnement);
+            $em->flush();
+            $em->persist($message);
             $em->flush();
             $em->persist($user);
             $em->flush();
@@ -61,13 +72,34 @@ class CoachController extends AbstractController {
                 'user' => $requestAdherent,
                 'finAbonnement' => null
             ]);
+            $admin = $ur->findByRole('ROLE_ADMIN');
+            $userAdherent = $ur->findOneBy([
+                'id' => $requestAdherent
+            ]);
             $abonnement->setEnCours(0);
             $abonnement->setFinAbonnement(new DateTime());
 
+            $messageForAdherent = new Messages;
+
+            $messageForAdherent->setDestinataire($userAdherent);
+            $messageForAdherent->setExpediteur($admin[0]);
+            $messageForAdherent->setTitre('Fin de l\'abonnement');
+            $messageForAdherent->setMessage('Nous sommes arriver à la fin de ton abonnement n\'hésite pas à garder contact avec ton coach. A très vite et bonne continuation et n\'oublie pas que tu es maître de ton destin');
+
+
+
             $em->persist($abonnement);
+            $em->flush();
+            $em->persist($messageForAdherent);
             $em->flush();
         }
 
         return $this->redirectToRoute('app_options_coach');
+    }
+
+    #[Route('/coach/conditions', name: 'app_conditions_coach')]
+    public function conditions(): Response {
+
+        return $this->render('profil_coach/conditions.html.twig');
     }
 }

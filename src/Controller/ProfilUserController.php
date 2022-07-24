@@ -12,25 +12,44 @@ use App\Form\MessagescoachType;
 use App\Form\ChangePasswordType;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\FormError;
+use App\Repository\CommandeRepository;
+use App\Repository\AbonnementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfilUserController extends AbstractController {
     #[Route('/profil', name: 'app_profil')]
-    public function index(): Response {
+    public function index(AbonnementRepository $ar): Response {
 
+        $this->addFlash('warning', 'En forme ? Soit prêt à tout casser !');
         if (!$this->getUser()) {
-            $this->addFlash('warning', 'En forme ? Soit prêt à tout casser !');
 
             return $this->redirectToRoute('app_login');
         }
+        $userAbonnement = $ar->findOneBy([
+            'user' => $this->getUser(),
+        ]);
 
-        return $this->render('profil_user/profil.html.twig');
+
+        return $this->render('profil_user/profil.html.twig', [
+            'userAbonnement' => $userAbonnement
+        ]);
+    }
+    #[Route('/profil/commandes', name: 'app_profil_commande')]
+    public function commandes(CommandeRepository $cr): Response {
+
+
+        $commandes = $cr->findBy([
+            'user' => $this->getUser(),
+        ]);
+
+        return $this->render('profil_user/commandes.html.twig', [
+            'commandes' => $commandes,
+        ]);
     }
 
     #[Route('/user/update/{id}', name: 'app_update_self_user')]
@@ -57,9 +76,15 @@ class ProfilUserController extends AbstractController {
 
 
     #[Route('/user/toncoach/{user}', name: 'app_ton_coach')]
-    public function toncoach(User $user): Response {
+    public function toncoach(User $user, AbonnementRepository $ar): Response {
+
+        $tonCoach = $ar->findOneBy([
+            'user' => $this->getUser()
+        ]);
+
         return $this->render('profil_user/toncoach.html.twig', [
-            'coach' => $user
+            'coach' => $user,
+            'tonCoach' => $tonCoach
         ]);
     }
 
@@ -140,7 +165,7 @@ class ProfilUserController extends AbstractController {
     /**
      * @Route("/send_coach/{user}", name="send_coach")
      */
-    public function sendCoach(User $user, Request $request, EntityManagerInterface $em): Response {
+    public function sendCoach(User $user, Request $request, EntityManagerInterface $em, AbonnementRepository $ar): Response {
         $message = new Messages;
         $form = $this->createForm(MessagescoachType::class, $message);
 
@@ -158,9 +183,15 @@ class ProfilUserController extends AbstractController {
             return $this->redirectToRoute('sent');
         }
 
+        $tonCoach = $ar->findOneBy([
+            'user' => $this->getUser()
+        ]);
+
+
         return $this->render("messages/send_coach.html.twig", [
             "form" => $form->createView(),
-            'coach' => $user
+            'coach' => $user,
+            'tonCoach' => $tonCoach
         ]);
     }
     /**
