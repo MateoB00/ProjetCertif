@@ -12,7 +12,6 @@ use App\Entity\Commande;
 use App\Form\ProduitType;
 use App\Entity\Partieblog;
 use App\Form\PartieblogType;
-use App\Form\UpdateUserType;
 use App\Form\CoachUpdateType;
 use App\Form\UpdateAdminUserType;
 use App\Repository\BlogRepository;

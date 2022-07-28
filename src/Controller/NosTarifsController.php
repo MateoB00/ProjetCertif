@@ -2,13 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Produit;
-use App\Entity\Entreepanier;
-use App\Form\AjoutproduitType;
-use App\Repository\UserRepository;
-use App\Repository\PanierRepository;
+
 use App\Repository\ProduitRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
